@@ -10,7 +10,6 @@ project(unnamed_project
 
 add_subdirectory(src)
 
-add_executable(unnamed_project ${SOURCE_FILES})
 
 # Pour des tests
 # add_subdirectory(test)
