@@ -7,15 +7,8 @@ project(unnamed_project
         DESCRIPTION "Logiciele de gestion des notes d'etudiants")
 
 
-set(SOURCE_FILES
-                src/main.c
-                src/etudiant.c
-                src/matiere.c
-                src/note.c
-                src/classe.c
-                src/helper.c)
 
-include_directories(include)
+add_subdirectory(src)
 
 add_executable(unnamed_project ${SOURCE_FILES})
 
