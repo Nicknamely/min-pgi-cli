@@ -1,1 +1,3 @@
-./build/*
+# Ignore le repertoire build: le doit varier selon la plateforme etc
+
+build/
