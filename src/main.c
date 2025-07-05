@@ -6,6 +6,6 @@
 #include <stdlib.h>
 
 int main() {
-  printf("Hello Wolrd\n");
+  printf("Compilation reussie\n");
   return EXIT_SUCCESS;
 }
