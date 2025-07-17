@@ -30,5 +30,8 @@ typedef struct {
 void initialiser_EtudiantDB(EtudiantDB *db, size_t capacite_initial);
 void ajouter_etudiant(EtudiantDB *db, Etudiant nouvel_etudiant);
 void supprimer_etudiant(EtudiantDB *db, size_t index);
-void freeEtudiantdb(EtudiantDB *db);
+void afficher_etudiants(const EtudiantDB *db);
+void modifier_etudiant(EtudiantDB *db, size_t index, Etudiant nouvel_etudiant);
+int rechercher_etudiant(const EtudiantDB *db, int numero);
+void freeEtudiantDB(EtudiantDB *db);
 #endif // !ETUDIANT_H

@@ -46,3 +46,40 @@ void supprimer_etudiant(EtudiantDB *db, size_t index) {
     }
   }
 }
+
+void afficher_etudiants(const EtudiantDB *db) {
+  if (db->taille == 0) {
+    printf("Aucun etudiant a afficher.\n");
+    return;
+  }
+  for (size_t i = 0; i < db->taille; i++) {
+    Etudiant e = db->etudiants[i];
+    printf("[%zu] %d | %s %s | %s | %02d/%02d/%04d\n", i, e.numero, e.nom, e.prenom, e.email, e.date_naissance.jour, e.date_naissance.mois, e.date_naissance.annee);
+  }
+}
+
+void modifier_etudiant(EtudiantDB *db, size_t index, Etudiant nouvel_etudiant) {
+  if (index >= db->taille) {
+    printf("Index invalide pour modification.\n");
+    return;
+  }
+  db->etudiants[index] = nouvel_etudiant;
+}
+
+int rechercher_etudiant(const EtudiantDB *db, int numero) {
+  for (size_t i = 0; i < db->taille; i++) {
+    if (db->etudiants[i].numero == numero) {
+      return (int)i;
+    }
+  }
+  return -1;
+}
+
+void freeEtudiantDB(EtudiantDB *db) {
+  if (db->etudiants) {
+    free(db->etudiants);
+    db->etudiants = NULL;
+  }
+  db->taille = 0;
+  db->capacite = 0;
+}
