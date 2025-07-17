@@ -34,3 +34,40 @@ void supprimer_etudiant(ClasseDB *db, size_t index) {
     db->classes[i] = db->classes[i + 1];
   }
 }
+
+void afficher_classes(const ClasseDB *db) {
+  if (db->taille == 0) {
+    printf("Aucune classe a afficher.\n");
+    return;
+  }
+  for (size_t i = 0; i < db->taille; i++) {
+    Classe c = db->classes[i];
+    printf("[%zu] %d | %s | %s\n", i, c.code, c.nom, c.niveau == LICENSE ? "LICENSE" : "MASTER");
+  }
+}
+
+void modifier_classe(ClasseDB *db, size_t index, Classe nouvelle_classe) {
+  if (index >= db->taille) {
+    printf("Index invalide pour modification.\n");
+    return;
+  }
+  db->classes[index] = nouvelle_classe;
+}
+
+int rechercher_classe(const ClasseDB *db, int code) {
+  for (size_t i = 0; i < db->taille; i++) {
+    if (db->classes[i].code == code) {
+      return (int)i;
+    }
+  }
+  return -1;
+}
+
+void freeClasseDB(ClasseDB *db) {
+  if (db->classes) {
+    free(db->classes);
+    db->classes = NULL;
+  }
+  db->taille = 0;
+  db->capacite = 0;
+}
