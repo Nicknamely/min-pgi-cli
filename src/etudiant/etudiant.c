@@ -35,4 +35,14 @@ void supprimer_etudiant(EtudiantDB *db, size_t index) {
   for (size_t i = index; index < db->taille - 1; i++) {
     db->etudiants[i] = db->etudiants[i + 1];
   }
+  // reduis l'espace si necessaire:
+  if (db->taille < db->capacite / 4 && db->capacite > 2) {
+    size_t nouvelle_capacite = db->capacite / 2;
+    Etudiant *temp =
+        realloc(db->etudiants, nouvelle_capacite * sizeof(Etudiant));
+    if (temp != NULL) {
+      db->etudiants = temp;
+      db->capacite = nouvelle_capacite;
+    }
+  }
 }

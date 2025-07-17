@@ -19,4 +19,6 @@ void initialiser_MatiereDB(MatiereDB *db, size_t capacite_initial);
 void ajouter_matiere(MatiereDB *db, Matiere nouvelle_matiere);
 void suprimer_matiere(MatiereDB *db, size_t index);
 
+void exporter_matiere_vers_csv();
+
 #endif // !MATIERE_H
