@@ -28,3 +28,83 @@ int charger_matieres_csv(const char *chemin, MatiereDB *db) {
     fclose(f);
     return 0;
 }
+
+int charger_classes_csv(const char *chemin, ClasseDB *db) {
+    FILE *f = fopen(chemin, "r");
+    if (!f) return -1;
+    char ligne[256];
+    while (fgets(ligne, sizeof(ligne), f)) {
+        Classe c;
+        char *token = strtok(ligne, ",");
+        if (!token) continue;
+        c.code = atoi(token);
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        strncpy(c.nom, token, sizeof(c.nom));
+        c.nom[sizeof(c.nom)-1] = 0;
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        c.niveau = strcmp(token, "LICENSE") == 0 ? LICENSE : MASTER;
+        ajouter_classe(db, c);
+    }
+    fclose(f);
+    return 0;
+}
+
+int charger_etudiants_csv(const char *chemin, EtudiantDB *db) {
+    FILE *f = fopen(chemin, "r");
+    if (!f) return -1;
+    char ligne[256];
+    while (fgets(ligne, sizeof(ligne), f)) {
+        Etudiant e;
+        char *token = strtok(ligne, ",");
+        if (!token) continue;
+        e.numero = atoi(token);
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        strncpy(e.nom, token, sizeof(e.nom));
+        e.nom[sizeof(e.nom)-1] = 0;
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        strncpy(e.prenom, token, sizeof(e.prenom));
+        e.prenom[sizeof(e.prenom)-1] = 0;
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        strncpy(e.email, token, sizeof(e.email));
+        e.email[sizeof(e.email)-1] = 0;
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        strncpy(e.date_naissance, token, sizeof(e.date_naissance));
+        e.date_naissance[sizeof(e.date_naissance)-1] = 0;
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        e.code = atoi(token);
+        ajouter_etudiant(db, e);
+    }
+    fclose(f);
+    return 0;
+}
+
+int charger_notes_csv(const char *chemin, NoteDB *db) {
+    FILE *f = fopen(chemin, "r");
+    if (!f) return -1;
+    char ligne[256];
+    while (fgets(ligne, sizeof(ligne), f)) {
+        Note n;
+        char *token = strtok(ligne, ",");
+        if (!token) continue;
+        n.numero = atoi(token);
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        n.reference = atoi(token);
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        n.noteCC = atof(token);
+        token = strtok(NULL, ",");
+        if (!token) continue;
+        n.noteDS = atof(token);
+        ajouter_note(db, n);
+    }
+    fclose(f);
+    return 0;
+}
