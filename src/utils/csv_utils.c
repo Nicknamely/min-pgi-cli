@@ -74,18 +74,14 @@ int charger_etudiants_csv(const char *chemin, EtudiantDB *db) {
         e.email[sizeof(e.email)-1] = 0;
         token = strtok(NULL, ",");
         if (!token) continue;
-        strncpy(e.date_naissance, token, sizeof(e.date_naissance));
-        e.date_naissance[sizeof(e.date_naissance)-1] = 0;
-        token = strtok(NULL, ",");
-        if (!token) continue;
-        e.code = atoi(token);
+        sscanf(token, "%d-%d-%d", &e.date_naissance.annee, &e.date_naissance.mois, &e.date_naissance.jour);
         ajouter_etudiant(db, e);
     }
     fclose(f);
     return 0;
 }
 
-int charger_notes_csv(const char *chemin, NoteDB *db) {
+int charger_notes_csv(const char *chemin, NoteDB *db, const EtudiantDB *etudiantDB, const MatiereDB *matiereDB) {
     FILE *f = fopen(chemin, "r");
     if (!f) return -1;
     char ligne[256];
@@ -93,17 +89,17 @@ int charger_notes_csv(const char *chemin, NoteDB *db) {
         Note n;
         char *token = strtok(ligne, ",");
         if (!token) continue;
-        n.numero = atoi(token);
+        n.numero_etudiant = atoi(token);
         token = strtok(NULL, ",");
         if (!token) continue;
-        n.reference = atoi(token);
+        n.reference_matiere = atoi(token);
         token = strtok(NULL, ",");
         if (!token) continue;
         n.noteCC = atof(token);
         token = strtok(NULL, ",");
         if (!token) continue;
         n.noteDS = atof(token);
-        ajouter_note(db, n);
+        ajouter_note(db, n, etudiantDB, matiereDB);
     }
     fclose(f);
     return 0;
