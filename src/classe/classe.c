@@ -4,20 +4,20 @@
 void initialiser_ClasseDB(ClasseDB *db, size_t capacite_initial) {
   db->classes = malloc(capacite_initial * sizeof(Classe));
   if (db->classes == NULL) {
-    fprintf(stderr, "Allocation de memoire echouer\n");
+    fprintf(stderr, "Allocation de memoire echouée\n");
     exit(EXIT_FAILURE);
   }
   db->taille = 0;
+  db->capacite = capacite_initial;
 }
 
-void ajouter_etudiant(ClasseDB *db, Classe nouvelle_classe) {
+void ajouter_classe(ClasseDB *db, Classe nouvelle_classe) {
   if (db->taille == db->capacite) {
-    size_t nouvelle_capacite = db->capacite * 2;
-
+    size_t nouvelle_capacite = db->capacite > 0 ? db->capacite * 2 : 1;
     Classe *temp = realloc(db->classes, nouvelle_capacite * sizeof(Classe));
     if (temp == NULL) {
-      fprintf(stderr, "Reallocation de memoire echouer ! \n");
-      free(temp);
+      fprintf(stderr, "Reallocation de memoire echouée !\n");
+      exit(EXIT_FAILURE);
     }
     db->classes = temp;
     db->capacite = nouvelle_capacite;
@@ -25,14 +25,15 @@ void ajouter_etudiant(ClasseDB *db, Classe nouvelle_classe) {
   db->classes[db->taille++] = nouvelle_classe;
 }
 
-void supprimer_etudiant(ClasseDB *db, size_t index) {
+void supprimer_classe(ClasseDB *db, size_t index) {
   if (index >= db->taille) {
-    fprintf(stderr, "Index invalide, doit etre inferieur aux nombre d'classes");
+    fprintf(stderr, "Index invalide, doit être inférieur au nombre de classes\n");
     return;
   }
-  for (size_t i = index; index < db->taille - 1; i++) {
+  for (size_t i = index; i < db->taille - 1; i++) {
     db->classes[i] = db->classes[i + 1];
   }
+  db->taille--;
 }
 
 void afficher_classes(const ClasseDB *db) {
