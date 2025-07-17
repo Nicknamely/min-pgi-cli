@@ -27,7 +27,8 @@ void ajouter_classe(ClasseDB *db, Classe nouvelle_classe) {
 
 void supprimer_classe(ClasseDB *db, size_t index) {
   if (index >= db->taille) {
-    fprintf(stderr, "Index invalide, doit être inférieur au nombre de classes\n");
+    fprintf(stderr,
+            "Index invalide, doit être inférieur au nombre de classes\n");
     return;
   }
   for (size_t i = index; i < db->taille - 1; i++) {
@@ -43,7 +44,8 @@ void afficher_classes(const ClasseDB *db) {
   }
   for (size_t i = 0; i < db->taille; i++) {
     Classe c = db->classes[i];
-    printf("[%zu] %d | %s | %s\n", i, c.code, c.nom, c.niveau == LICENSE ? "LICENSE" : "MASTER");
+    printf("[%zu] %d | %s | %s\n", i, c.code, c.nom,
+           c.niveau == LICENSE ? "LICENSE" : "MASTER");
   }
 }
 

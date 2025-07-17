@@ -1,8 +1,8 @@
 #ifndef NOTE_H
 #define NOTE_H
-#include <stdlib.h>
 #include "../etudiant/etudiant.h"
 #include "../matiere/matiere.h"
+#include <stdlib.h>
 
 // Structure Note (etre_note)
 typedef struct {
@@ -21,11 +21,13 @@ typedef struct {
 
 // Fonctions CRUD pour Note
 void initialiser_NoteDB(NoteDB *db, size_t capacite_initial);
-int ajouter_note(NoteDB *db, Note nouvelle_note, const EtudiantDB *etudiantDB, const MatiereDB *matiereDB);
+int ajouter_note(NoteDB *db, Note nouvelle_note, const EtudiantDB *etudiantDB,
+                 const MatiereDB *matiereDB);
 void supprimer_note(NoteDB *db, size_t index);
 void afficher_notes(const NoteDB *db);
 void modifier_note(NoteDB *db, size_t index, Note nouvelle_note);
-int rechercher_note(const NoteDB *db, int numero_etudiant, int reference_matiere);
+int rechercher_note(const NoteDB *db, int numero_etudiant,
+                    int reference_matiere);
 void freeNoteDB(NoteDB *db);
 
 #endif // !NOTE_H

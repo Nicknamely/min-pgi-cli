@@ -14,7 +14,8 @@ void initialiser_NoteDB(NoteDB *db, size_t capacite_initial) {
 }
 
 // Ajout securise : verifie que l'etudiant et la matiere existent
-int ajouter_note(NoteDB *db, Note nouvelle_note, const EtudiantDB *etudiantDB, const MatiereDB *matiereDB) {
+int ajouter_note(NoteDB *db, Note nouvelle_note, const EtudiantDB *etudiantDB,
+                 const MatiereDB *matiereDB) {
   if (rechercher_etudiant(etudiantDB, nouvelle_note.numero_etudiant) == -1) {
     printf("etudiant inexistant\n");
     return 0;
@@ -55,7 +56,8 @@ void afficher_notes(const NoteDB *db) {
   }
   for (size_t i = 0; i < db->taille; i++) {
     Note n = db->notes[i];
-    printf("[%zu] etudiant: %d | matiere: %d | cc: %.2f | ds: %.2f\n", i, n.numero_etudiant, n.reference_matiere, n.noteCC, n.noteDS);
+    printf("[%zu] etudiant: %d | matiere: %d | cc: %.2f | ds: %.2f\n", i,
+           n.numero_etudiant, n.reference_matiere, n.noteCC, n.noteDS);
   }
 }
 
@@ -67,9 +69,11 @@ void modifier_note(NoteDB *db, size_t index, Note nouvelle_note) {
   db->notes[index] = nouvelle_note;
 }
 
-int rechercher_note(const NoteDB *db, int numero_etudiant, int reference_matiere) {
+int rechercher_note(const NoteDB *db, int numero_etudiant,
+                    int reference_matiere) {
   for (size_t i = 0; i < db->taille; i++) {
-    if (db->notes[i].numero_etudiant == numero_etudiant && db->notes[i].reference_matiere == reference_matiere) {
+    if (db->notes[i].numero_etudiant == numero_etudiant &&
+        db->notes[i].reference_matiere == reference_matiere) {
       return (int)i;
     }
   }

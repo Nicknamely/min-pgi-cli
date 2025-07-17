@@ -14,18 +14,22 @@ void initialiser_ClasseMatiereDB(ClasseMatiereDB *db, size_t capacite_initial) {
 }
 
 // Ajout sécurisé : vérifie que la classe et la matière existent
-int ajouter_classe_matiere(ClasseMatiereDB *db, ClasseMatiere nouvelle_relation, const ClasseDB *classeDB, const MatiereDB *matiereDB) {
+int ajouter_classe_matiere(ClasseMatiereDB *db, ClasseMatiere nouvelle_relation,
+                           const ClasseDB *classeDB,
+                           const MatiereDB *matiereDB) {
   if (rechercher_classe(classeDB, nouvelle_relation.code_classe) == -1) {
     printf("Classe inexistante !\n");
     return 0;
   }
-  if (rechercher_matiere(matiereDB, nouvelle_relation.reference_matiere) == -1) {
+  if (rechercher_matiere(matiereDB, nouvelle_relation.reference_matiere) ==
+      -1) {
     printf("Matiere inexistante !\n");
     return 0;
   }
   if (db->taille == db->capacite) {
     size_t nouvelle_capacite = db->capacite * 2;
-    ClasseMatiere *temp = realloc(db->relations, nouvelle_capacite * sizeof(ClasseMatiere));
+    ClasseMatiere *temp =
+        realloc(db->relations, nouvelle_capacite * sizeof(ClasseMatiere));
     if (temp == NULL) {
       fprintf(stderr, "Reallocation de memoire echouee !\n");
       return 0;
@@ -55,13 +59,16 @@ void afficher_classe_matieres(const ClasseMatiereDB *db) {
   }
   for (size_t i = 0; i < db->taille; i++) {
     ClasseMatiere rel = db->relations[i];
-    printf("[%zu] Classe: %d | Matiere: %d\n", i, rel.code_classe, rel.reference_matiere);
+    printf("[%zu] Classe: %d | Matiere: %d\n", i, rel.code_classe,
+           rel.reference_matiere);
   }
 }
 
-int rechercher_classe_matiere(const ClasseMatiereDB *db, int code_classe, int reference_matiere) {
+int rechercher_classe_matiere(const ClasseMatiereDB *db, int code_classe,
+                              int reference_matiere) {
   for (size_t i = 0; i < db->taille; i++) {
-    if (db->relations[i].code_classe == code_classe && db->relations[i].reference_matiere == reference_matiere) {
+    if (db->relations[i].code_classe == code_classe &&
+        db->relations[i].reference_matiere == reference_matiere) {
       return (int)i;
     }
   }
@@ -75,4 +82,4 @@ void freeClasseMatiereDB(ClasseMatiereDB *db) {
   }
   db->taille = 0;
   db->capacite = 0;
-} 
+}

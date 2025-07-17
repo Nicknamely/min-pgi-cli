@@ -8,6 +8,8 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/helper
     ${CMAKE_CURRENT_SOURCE_DIR}/matiere
     ${CMAKE_CURRENT_SOURCE_DIR}/note
+    ${CMAKE_CURRENT_SOURCE_DIR}/ui
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils
 )
 
 # Definir le nom de l'executable qui resulterons de la compilation des fichiers

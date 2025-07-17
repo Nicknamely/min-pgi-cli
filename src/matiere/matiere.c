@@ -27,7 +27,8 @@ void ajouter_matiere(MatiereDB *db, Matiere nouvelle_maitiere) {
 
 void supprimer_matiere(MatiereDB *db, size_t index) {
   if (index >= db->taille) {
-    fprintf(stderr, "Index invalide, doit être inférieur au nombre de matières\n");
+    fprintf(stderr,
+            "Index invalide, doit être inférieur au nombre de matières\n");
     return;
   }
   for (size_t i = index; i < db->taille - 1; i++) {

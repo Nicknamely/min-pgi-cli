@@ -54,7 +54,9 @@ void afficher_etudiants(const EtudiantDB *db) {
   }
   for (size_t i = 0; i < db->taille; i++) {
     Etudiant e = db->etudiants[i];
-    printf("[%zu] %d | %s %s | %s | %02d/%02d/%04d\n", i, e.numero, e.nom, e.prenom, e.email, e.date_naissance.jour, e.date_naissance.mois, e.date_naissance.annee);
+    printf("[%zu] %d | %s %s | %s | %02d/%02d/%04d\n", i, e.numero, e.nom,
+           e.prenom, e.email, e.date_naissance.jour, e.date_naissance.mois,
+           e.date_naissance.annee);
   }
 }
 
