@@ -20,5 +20,9 @@ void ajouter_matiere(MatiereDB *db, Matiere nouvelle_matiere);
 void suprimer_matiere(MatiereDB *db, size_t index);
 
 void exporter_matiere_vers_csv();
+void afficher_matieres(const MatiereDB *db);
+void modifier_matiere(MatiereDB *db, size_t index, Matiere nouvelle_matiere);
+int rechercher_matiere(const MatiereDB *db, int reference);
+void freeMatiereDB(MatiereDB *db);
 
 #endif // !MATIERE_H

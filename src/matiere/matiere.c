@@ -44,3 +44,40 @@ void supprimer_etudiant(MatiereDB *db, size_t index) {
     }
   }
 }
+
+void afficher_matieres(const MatiereDB *db) {
+  if (db->taille == 0) {
+    printf("Aucune matiere a afficher.\n");
+    return;
+  }
+  for (size_t i = 0; i < db->taille; i++) {
+    Matiere m = db->matieres[i];
+    printf("[%zu] %d | %s | %d\n", i, m.reference, m.libelle, m.coeficient);
+  }
+}
+
+void modifier_matiere(MatiereDB *db, size_t index, Matiere nouvelle_matiere) {
+  if (index >= db->taille) {
+    printf("Index invalide pour modification.\n");
+    return;
+  }
+  db->matieres[index] = nouvelle_matiere;
+}
+
+int rechercher_matiere(const MatiereDB *db, int reference) {
+  for (size_t i = 0; i < db->taille; i++) {
+    if (db->matieres[i].reference == reference) {
+      return (int)i;
+    }
+  }
+  return -1;
+}
+
+void freeMatiereDB(MatiereDB *db) {
+  if (db->matieres) {
+    free(db->matieres);
+    db->matieres = NULL;
+  }
+  db->taille = 0;
+  db->capacite = 0;
+}
