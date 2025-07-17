@@ -27,22 +27,13 @@ void ajouter_matiere(MatiereDB *db, Matiere nouvelle_maitiere) {
 
 void supprimer_matiere(MatiereDB *db, size_t index) {
   if (index >= db->taille) {
-    fprintf(stderr,
-            "Index invalide, doit etre inferieur aux nombre d'matieres");
+    fprintf(stderr, "Index invalide, doit être inférieur au nombre de matières\n");
     return;
   }
-  for (size_t i = index; index < db->taille - 1; i++) {
+  for (size_t i = index; i < db->taille - 1; i++) {
     db->matieres[i] = db->matieres[i + 1];
   }
-  // reduis l'espace si necessaire:
-  if (db->taille < db->capacite / 4 && db->capacite > 2) {
-    size_t nouvelle_capacite = db->capacite / 2;
-    Matiere *temp = realloc(db->matieres, nouvelle_capacite * sizeof(Matiere));
-    if (temp != NULL) {
-      db->matieres = temp;
-      db->capacite = nouvelle_capacite;
-    }
-  }
+  db->taille--;
 }
 
 void afficher_matieres(const MatiereDB *db) {
