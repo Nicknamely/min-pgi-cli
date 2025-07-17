@@ -8,6 +8,7 @@ void initialiser_MatiereDB(MatiereDB *db, size_t capacite_initial) {
     exit(EXIT_FAILURE);
   }
   db->taille = 0;
+  db->capacite = capacite_initial;
 }
 
 void ajouter_matiere(MatiereDB *db, Matiere nouvelle_maitiere) {
@@ -16,8 +17,8 @@ void ajouter_matiere(MatiereDB *db, Matiere nouvelle_maitiere) {
 
     Matiere *temp = realloc(db->matieres, nouvelle_capacite * sizeof(Matiere));
     if (temp == NULL) {
-      fprintf(stderr, "Reallocation de memoire echouer ! \n");
-      free(temp);
+      fprintf(stderr, "Reallocation de memoire echouer !\n");
+      exit(EXIT_FAILURE);
     }
     db->matieres = temp;
     db->capacite = nouvelle_capacite;
