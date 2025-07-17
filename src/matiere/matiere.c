@@ -10,7 +10,7 @@ void initialiser_MatiereDB(MatiereDB *db, size_t capacite_initial) {
   db->taille = 0;
 }
 
-void ajouter_etudiant(MatiereDB *db, Matiere nouvelle_maitiere) {
+void ajouter_matiere(MatiereDB *db, Matiere nouvelle_maitiere) {
   if (db->taille == db->capacite) {
     size_t nouvelle_capacite = db->capacite * 2;
 
@@ -25,7 +25,7 @@ void ajouter_etudiant(MatiereDB *db, Matiere nouvelle_maitiere) {
   db->matieres[db->taille++] = nouvelle_maitiere;
 }
 
-void supprimer_etudiant(MatiereDB *db, size_t index) {
+void supprimer_matiere(MatiereDB *db, size_t index) {
   if (index >= db->taille) {
     fprintf(stderr,
             "Index invalide, doit etre inferieur aux nombre d'matieres");
