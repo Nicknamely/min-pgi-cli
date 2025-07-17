@@ -1,1 +1,1 @@
-#include "../include/note.h"
+#include "./note.h"
