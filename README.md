@@ -1,3 +1,5 @@
+# PGI - C - TUI
+
 ## How to build the project
 
 ### Linux or WSL (prefered dev env)
