@@ -163,6 +163,7 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
 
           exporter_matieres_csv(chemin_matieres, db_matiere);
         }
+
       } while (m != 0);
       break;
     }
@@ -191,7 +192,7 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
           fgets(et.prenom, sizeof(et.prenom), stdin);
           et.prenom[strcspn(et.prenom, "\n")] = 0;
 
-          // Email et date de naissance peuvent être ajoutés ici si besoin
+          // Email et date de naissance à compléter si besoin
 
           ajouter_etudiant(db_etudiant, et);
           exporter_etudiants_csv(chemin_etudiants, db_etudiant);
@@ -222,7 +223,7 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
           fgets(et.prenom, sizeof(et.prenom), stdin);
           et.prenom[strcspn(et.prenom, "\n")] = 0;
 
-          // Email et date de naissance peuvent être ajoutés ici si besoin
+          // Email et date de naissance à compléter si besoin
 
           modifier_etudiant(db_etudiant, idx, et);
           exporter_etudiants_csv(chemin_etudiants, db_etudiant);
@@ -239,6 +240,7 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
 
           exporter_etudiants_csv(chemin_etudiants, db_etudiant);
         }
+
       } while (e != 0);
       break;
     }
