@@ -13,12 +13,10 @@ void initialiser_EtudiantDB(EtudiantDB *db, size_t capacite_initial) {
 void ajouter_etudiant(EtudiantDB *db, Etudiant nouvel_etudiant) {
   if (db->taille == db->capacite) {
     size_t nouvelle_capacite = db->capacite * 2;
-
-    Etudiant *temp =
-        realloc(db->etudiants, nouvelle_capacite * sizeof(Etudiant));
+    Etudiant *temp = realloc(db->etudiants, nouvelle_capacite * sizeof(Etudiant));
     if (temp == NULL) {
       fprintf(stderr, "Reallocation de memoire echouer ! \n");
-      free(temp);
+      exit(EXIT_FAILURE);
     }
     db->etudiants = temp;
     db->capacite = nouvelle_capacite;
@@ -54,9 +52,7 @@ void afficher_etudiants(const EtudiantDB *db) {
   }
   for (size_t i = 0; i < db->taille; i++) {
     Etudiant e = db->etudiants[i];
-    printf("[%zu] %d | %s %s | %s | %02d/%02d/%04d\n", i, e.numero, e.nom,
-           e.prenom, e.email, e.date_naissance.jour, e.date_naissance.mois,
-           e.date_naissance.annee);
+    printf("%d,%s,%s,%s,%02d/%02d/%04d,%d\n", e.numero, e.nom, e.prenom, e.email, e.date_naissance.jour, e.date_naissance.mois, e.date_naissance.annee, e.classe_code);
   }
 }
 

@@ -17,6 +17,7 @@ typedef struct {
   char prenom[20];
   char email[20];
   Date date_naissance;
+  int classe_code; // Ajout pour l'association étudiant-classe
 } Etudiant;
 
 // Tableau dynamique
