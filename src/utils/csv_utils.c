@@ -4,7 +4,7 @@
 #include <string.h>
 
 // Fonctions de chargement CSV
-// Lecture ligne par ligne, decoupage, ajout dans la base
+// Lecture ligne par ligne, decoupage, ajout dans la base (tableau dynamque)
 
 int charger_matieres_csv(const char *chemin, MatiereDB *db) {
   FILE *f = fopen(chemin, "r");
@@ -13,28 +13,44 @@ int charger_matieres_csv(const char *chemin, MatiereDB *db) {
     return -1;
   }
   char ligne[256];
+  db->taille = 0;
+  fgets(ligne, sizeof(ligne), f); // ignore l'en-tete
   while (fgets(ligne, sizeof(ligne), f)) {
     Matiere m;
     char *token = strtok(ligne, ",");
-    if (!token)
-      continue;
+    if (!token || strlen(token) == 0) continue;
     m.reference = atoi(token);
-
     token = strtok(NULL, ",");
-    if (!token)
-      continue;
+    if (!token || strlen(token) == 0) continue;
     strncpy(m.libelle, token, sizeof(m.libelle));
     m.libelle[sizeof(m.libelle) - 1] = 0;
-
     token = strtok(NULL, ",");
-    if (!token)
-      continue;
+    if (!token || strlen(token) == 0) continue;
     m.coeficient = atoi(token);
-
     ajouter_matiere(db, m);
+    db->taille++;
   }
   fclose(f);
   return 0;
+}
+int charger_classe_matieres_csv(const char *chemin, ClasseMatiereDB *db) {
+    FILE *f = fopen(chemin, "r");
+    if (!f) return -1;
+    db->taille = 0;
+    char ligne[256];
+    fgets(ligne, sizeof(ligne), f); // ignore l'en-tete
+    while (fgets(ligne, sizeof(ligne), f)) {
+        char *token = strtok(ligne, ",");
+        if (!token || strlen(token) == 0) continue;
+        int code = atoi(token);
+        token = strtok(NULL, ",");
+        if (!token || strlen(token) == 0) continue;
+        int ref = atoi(token);
+        ClasseMatiere rel = {code, ref};
+        db->relations[db->taille++] = rel;
+    }
+    fclose(f);
+    return 0;
 }
 
 int charger_classes_csv(const char *chemin, ClasseDB *db) {
@@ -43,23 +59,27 @@ int charger_classes_csv(const char *chemin, ClasseDB *db) {
     // Fichier absent
     return -1;
   }
+  db->taille = 0;
+  // Réinitialise le contenu du tableau si dynamique
+  if (db->classes && db->capacite > 0) {
+    memset(db->classes, 0, sizeof(Classe) * db->capacite);
+  }
   char ligne[256];
+  fgets(ligne, sizeof(ligne), f); // ignore l'en-tete
   while (fgets(ligne, sizeof(ligne), f)) {
     Classe c;
     char *token = strtok(ligne, ",");
-    if (!token)
-      continue;
+    if (!token || strlen(token) == 0) continue;
     c.code = atoi(token);
     token = strtok(NULL, ",");
-    if (!token)
-      continue;
+    if (!token || strlen(token) == 0) continue;
     strncpy(c.nom, token, sizeof(c.nom));
     c.nom[sizeof(c.nom) - 1] = 0;
     token = strtok(NULL, ",");
-    if (!token)
-      continue;
+    if (!token || strlen(token) == 0) continue;
     c.niveau = strcmp(token, "LICENSE") == 0 ? LICENSE : MASTER;
     ajouter_classe(db, c);
+    db->taille++;
   }
   fclose(f);
   return 0;
@@ -68,15 +88,37 @@ int charger_classes_csv(const char *chemin, ClasseDB *db) {
 int charger_etudiants_csv(const char *chemin, EtudiantDB *db) {
   FILE *f = fopen(chemin, "r");
   if (!f) return -1;
-  char ligne[128];
-  fgets(ligne, sizeof(ligne), f); // ignore l'en-tête
+  char ligne[256];
   db->taille = 0;
+  fgets(ligne, sizeof(ligne), f); // ignore l'en-tete
   while (fgets(ligne, sizeof(ligne), f)) {
     Etudiant e;
-    char date[20];
-    sscanf(ligne, "%d,%29[^,],%19[^,],%19[^,],%19[^,],%d/%d/%d,%d",
-           &e.numero, e.nom, e.prenom, e.email, date,
-           &e.date_naissance.jour, &e.date_naissance.mois, &e.date_naissance.annee, &e.classe_code);
+    char *token = strtok(ligne, ",");
+    if (!token) continue;
+    e.numero = atoi(token);
+    token = strtok(NULL, ",");
+    if (!token) continue;
+    strncpy(e.nom, token, sizeof(e.nom));
+    e.nom[sizeof(e.nom) - 1] = 0;
+    token = strtok(NULL, ",");
+    if (!token) continue;
+    strncpy(e.prenom, token, sizeof(e.prenom));
+    e.prenom[sizeof(e.prenom) - 1] = 0;
+    token = strtok(NULL, ",");
+    if (!token) continue;
+    strncpy(e.email, token, sizeof(e.email));
+    e.email[sizeof(e.email) - 1] = 0;
+    token = strtok(NULL, ",");
+    if (!token) continue;
+    // Date au format jj/mm/aaaa
+    int j=0, m=0, a=0;
+    sscanf(token, "%d/%d/%d", &j, &m, &a);
+    e.date_naissance.jour = j;
+    e.date_naissance.mois = m;
+    e.date_naissance.annee = a;
+    token = strtok(NULL, ",");
+    if (!token) continue;
+    e.classe_code = atoi(token);
     db->etudiants[db->taille++] = e;
   }
   fclose(f);
@@ -92,6 +134,8 @@ int charger_notes_csv(const char *chemin, NoteDB *db,
     return -1;
   }
   char ligne[256];
+  db->taille = 0;
+  fgets(ligne, sizeof(ligne), f); // ignore l'en-tete
   while (fgets(ligne, sizeof(ligne), f)) {
     Note n;
     char *token = strtok(ligne, ",");
@@ -111,6 +155,7 @@ int charger_notes_csv(const char *chemin, NoteDB *db,
       continue;
     n.noteDS = atof(token);
     ajouter_note(db, n, etudiantDB, matiereDB);
+    db->taille++;
   }
   fclose(f);
   return 0;
@@ -155,10 +200,10 @@ int exporter_etudiants_csv(const char *chemin, const EtudiantDB *db) {
     printf("Erreur ouverture %s pour ecrire les etudiants\n", chemin);
     return -1;
   }
-  fprintf(f, "numero,nom,prenom,email,jour,mois,annee,classe_code\n");
+  fprintf(f, "numero,nom,prenom,email,date_naissance,classe_code\n");
   for (int i = 0; i < db->taille; i++) {
     Etudiant *e = &db->etudiants[i];
-    fprintf(f, "%d,%s,%s,%s,%d,%d,%d,%d\n", e->numero, e->nom, e->prenom, e->email,
+    fprintf(f, "%d,%s,%s,%s,%02d/%02d/%04d,%d\n", e->numero, e->nom, e->prenom, e->email,
             e->date_naissance.jour, e->date_naissance.mois,
             e->date_naissance.annee, e->classe_code);
   }
@@ -213,18 +258,6 @@ int exporter_classe_matieres_csv(const char *chemin, const ClasseMatiereDB *db, 
     return 0;
 }
 
-int charger_classe_matieres_csv(const char *chemin, ClasseMatiereDB *db) {
-    FILE *f = fopen(chemin, "r");
-    if (!f) return -1;
-    db->taille = 0;
-    int code, ref;
-    while (fscanf(f, "%d,%d\n", &code, &ref) == 2) {
-        ClasseMatiere rel = {code, ref};
-        db->relations[db->taille++] = rel;
-    }
-    fclose(f);
-    return 0;
-}
 
 // TODO: Gestions des erreurs de format CSV
 
