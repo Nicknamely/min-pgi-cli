@@ -1,8 +1,104 @@
 #include "./etudiant.h"
+#include <stdio.h>
 
-// TODO: Gestions des etudiant
-// -[ ] Definition de la structure etudiant
-// -[ ] Une fonction pour retourner la liste des etudiant
-// -[ ] Une fontion pour rechercher un etudiant
-// -[ ] Une fonction pour ajouter une etudiant
-// -[ ] Une fontion pour suprimmer une etudiant
+void initialiser_EtudiantDB(EtudiantDB *db, size_t capacite_initial) {
+  db->etudiants = malloc(capacite_initial * sizeof(Etudiant));
+  if (db->etudiants == NULL) {
+    fprintf(stderr, "Allocation de memoire echouee\n");
+    exit(EXIT_FAILURE);
+  }
+  db->taille = 0;
+}
+
+void ajouter_etudiant(EtudiantDB *db, Etudiant nouvel_etudiant) {
+  // Agrandit le tableau si besoin
+  if (db->taille == db->capacite) {
+    size_t nouvelle_capacite = db->capacite * 2;
+    Etudiant *temp =
+        realloc(db->etudiants, nouvelle_capacite * sizeof(Etudiant));
+    if (temp == NULL) {
+      fprintf(stderr, "Reallocation de memoire echouee ! \n");
+      exit(EXIT_FAILURE);
+    }
+    db->etudiants = temp;
+    db->capacite = nouvelle_capacite;
+  }
+  db->etudiants[db->taille++] = nouvel_etudiant;
+}
+
+void supprimer_etudiant(EtudiantDB *db, size_t index) {
+  // Verifie la validite de l'index
+  if (index >= db->taille) {
+    fprintf(stderr,
+            "Index invalide, doit etre inferieur au nombre d'etudiants");
+    return;
+  }
+  // Decale les elements pour combler le trou
+  for (size_t i = index; i < db->taille - 1; i++) {
+    db->etudiants[i] = db->etudiants[i + 1];
+  }
+  db->taille--;
+  // Reduit l'espace si necessaire
+  if (db->taille < db->capacite / 4 && db->capacite > 2) {
+    size_t nouvelle_capacite = db->capacite / 2;
+    Etudiant *temp =
+        realloc(db->etudiants, nouvelle_capacite * sizeof(Etudiant));
+    if (temp != NULL) {
+      db->etudiants = temp;
+      db->capacite = nouvelle_capacite;
+    }
+  }
+}
+
+void afficher_etudiants(const EtudiantDB *db) {
+  if (db->taille == 0) {
+    printf("Aucun etudiant a afficher.\n");
+    return;
+  }
+  // Affichage du tableau formate
+  printf(
+      "+-----+--------+----------------------+----------------------+----------"
+      "------------+------------+------------+------------+-------------+\n");
+  printf("| Idx | Numero | Nom                  | Prenom               | Email "
+         "               | Naissance  | ClasseCode |\n");
+  printf(
+      "+-----+--------+----------------------+----------------------+----------"
+      "------------+------------+------------+------------+-------------+\n");
+  for (size_t i = 0; i < db->taille; i++) {
+    Etudiant e = db->etudiants[i];
+    printf("| %3zu | %6d | %-20s | %-20s | %-20s | %02d/%02d/%04d | %10d |\n",
+           i, e.numero, e.nom, e.prenom, e.email, e.date_naissance.jour,
+           e.date_naissance.mois, e.date_naissance.annee, e.classe_code);
+  }
+  printf(
+      "+-----+--------+----------------------+----------------------+----------"
+      "------------+------------+------------+------------+-------------+\n");
+}
+
+void modifier_etudiant(EtudiantDB *db, size_t index, Etudiant nouvel_etudiant) {
+  // Verifie la validite de l'index
+  if (index >= db->taille) {
+    printf("Index invalide pour modification.\n");
+    return;
+  }
+  db->etudiants[index] = nouvel_etudiant;
+}
+
+int rechercher_etudiant(const EtudiantDB *db, int numero) {
+  // Recherche sequentielle par numero
+  for (size_t i = 0; i < db->taille; i++) {
+    if (db->etudiants[i].numero == numero) {
+      return (int)i;
+    }
+  }
+  return -1;
+}
+
+void freeEtudiantDB(EtudiantDB *db) {
+  if (db->etudiants) {
+    free(db->etudiants);
+    db->etudiants = NULL;
+  }
+  db->taille = 0;
+  db->capacite = 0;
+}
