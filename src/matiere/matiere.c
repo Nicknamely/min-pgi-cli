@@ -57,6 +57,9 @@ void modifier_matiere(MatiereDB *db, size_t index, Matiere nouvelle_matiere) {
   db->matieres[index] = nouvelle_matiere;
 }
 
+void associer_matiere_classe(MatiereDB *db_matiere, int reference,
+                             int code_classe) {}
+
 int rechercher_matiere(const MatiereDB *db, int reference) {
   for (size_t i = 0; i < db->taille; i++) {
     if (db->matieres[i].reference == reference) {

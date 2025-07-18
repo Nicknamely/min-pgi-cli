@@ -18,7 +18,8 @@ typedef struct {
 void initialiser_MatiereDB(MatiereDB *db, size_t capacite_initial);
 void ajouter_matiere(MatiereDB *db, Matiere nouvelle_matiere);
 void supprimer_matiere(MatiereDB *db, size_t index);
-
+void associer_matiere_classe(MatiereDB *db_matiere, int reference,
+                             int code_classe);
 void exporter_matiere_vers_csv();
 void afficher_matieres(const MatiereDB *db);
 void modifier_matiere(MatiereDB *db, size_t index, Matiere nouvelle_matiere);
