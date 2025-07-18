@@ -14,4 +14,4 @@ include_directories(
 
 # Definir le nom de l'executable qui resulterons de la compilation des fichiers
 # sources
-add_executable(unnamed_project ${APP_SOURCES})
+add_executable(pgi-cli ${APP_SOURCES})
