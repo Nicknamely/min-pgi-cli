@@ -43,13 +43,15 @@ int main() {
   char chemin_matieres[160];
   char chemin_etudiants[160];
   char chemin_notes[160];
+  char chemin_associations[160];
 
   snprintf(chemin_classes, sizeof(chemin_classes), "%s/classes.csv", chemin_session);
   snprintf(chemin_matieres, sizeof(chemin_matieres), "%s/matieres.csv", chemin_session);
   snprintf(chemin_etudiants, sizeof(chemin_etudiants), "%s/etudiants.csv", chemin_session);
   snprintf(chemin_notes, sizeof(chemin_notes), "%s/notes.csv", chemin_session);
+  snprintf(chemin_associations, sizeof(chemin_associations), "%s/matiere_clas_asso.csv", chemin_session);
 
-  creer_csv_session(chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes);
+  creer_csv_session(chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes, chemin_associations);
 
   // Initialisation des bases de donnees
   ClasseDB db_classe;
