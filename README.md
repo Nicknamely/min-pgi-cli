@@ -1,4 +1,4 @@
-# PGI - C - TUI
+# PGI-CLI
 
 ## How to build the project
 
