@@ -19,7 +19,8 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
   if (db_classe_matiere.relations == NULL) {
     initialiser_ClasseMatiereDB(&db_classe_matiere, 10);
     // Chargement automatique des associations a l'ouverture de la session
-    charger_classe_matieres_csv("docs/samples/matiere_clas_asso.csv", &db_classe_matiere);
+    charger_classe_matieres_csv("docs/samples/matiere_clas_asso.csv",
+                                &db_classe_matiere);
   }
 
   // Utilisation de fgets() et sscanf() pour error handling et securite
@@ -295,16 +296,19 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
               printf("Reference matiere : ");
               if (fgets(buffer, sizeof(buffer), stdin)) {
                 if (sscanf(buffer, "%d", &rel.reference_matiere) != 1) {
-                  printf("Entree invalide. Veuillez entrer une reference valide.\n");
+                  printf("Entree invalide. Veuillez entrer une reference "
+                         "valide.\n");
                   continue;
                 }
               } else {
                 printf("Erreur lors de la lecture de l'entree.\n");
                 continue;
               }
-              if (ajouter_classe_matiere(&db_classe_matiere, rel, db_classe, db_matiere))
+              if (ajouter_classe_matiere(&db_classe_matiere, rel, db_classe,
+                                         db_matiere))
                 printf("Association ajoutee.\n");
-              exporter_classe_matieres_csv(chemin_matieres, &db_classe_matiere, db_classe, db_matiere);
+              exporter_classe_matieres_csv(chemin_matieres, &db_classe_matiere,
+                                           db_classe, db_matiere);
             } else if (choix_asso == 3) {
               printf("Index a dissocier : ");
               int idx;
@@ -318,7 +322,8 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
                 continue;
               }
               supprimer_classe_matiere(&db_classe_matiere, idx);
-              exporter_classe_matieres_csv(chemin_matieres, &db_classe_matiere, db_classe, db_matiere);
+              exporter_classe_matieres_csv(chemin_matieres, &db_classe_matiere,
+                                           db_classe, db_matiere);
             }
           } while (choix_asso != 0);
         } else if (m == 6) {
@@ -558,7 +563,8 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
           int num_etudiant, ref_matiere;
           float noteCC, noteDS;
           printf("Numero etudiant : ");
-          if (fgets(buffer, sizeof(buffer), stdin) && sscanf(buffer, "%d", &num_etudiant) == 1) {
+          if (fgets(buffer, sizeof(buffer), stdin) &&
+              sscanf(buffer, "%d", &num_etudiant) == 1) {
             if (rechercher_etudiant(db_etudiant, num_etudiant) == -1) {
               printf("Etudiant inexistant.\n");
               continue;
@@ -568,7 +574,8 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
             continue;
           }
           printf("Reference matiere : ");
-          if (fgets(buffer, sizeof(buffer), stdin) && sscanf(buffer, "%d", &ref_matiere) == 1) {
+          if (fgets(buffer, sizeof(buffer), stdin) &&
+              sscanf(buffer, "%d", &ref_matiere) == 1) {
             if (rechercher_matiere(db_matiere, ref_matiere) == -1) {
               printf("Matiere inexistante.\n");
               continue;
@@ -578,13 +585,17 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
             continue;
           }
           printf("Note CC (0-20) : ");
-          if (fgets(buffer, sizeof(buffer), stdin) && sscanf(buffer, "%f", &noteCC) == 1 && noteCC >= 0 && noteCC <= 20) {
+          if (fgets(buffer, sizeof(buffer), stdin) &&
+              sscanf(buffer, "%f", &noteCC) == 1 && noteCC >= 0 &&
+              noteCC <= 20) {
           } else {
             printf("Note CC invalide.\n");
             continue;
           }
           printf("Note DS (0-20) : ");
-          if (fgets(buffer, sizeof(buffer), stdin) && sscanf(buffer, "%f", &noteDS) == 1 && noteDS >= 0 && noteDS <= 20) {
+          if (fgets(buffer, sizeof(buffer), stdin) &&
+              sscanf(buffer, "%f", &noteDS) == 1 && noteDS >= 0 &&
+              noteDS <= 20) {
           } else {
             printf("Note DS invalide.\n");
             continue;
@@ -596,11 +607,12 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
           } else {
             printf("Erreur lors de l'ajout de la note.\n");
           }
-        }
-        else if (n == 3) { // Ajouter les notes d'un etudiant dans toutes ses matieres
+        } else if (n == 3) { // Ajouter les notes d'un etudiant dans toutes ses
+                             // matieres
           int num_etudiant;
           printf("Numero etudiant : ");
-          if (fgets(buffer, sizeof(buffer), stdin) && sscanf(buffer, "%d", &num_etudiant) == 1) {
+          if (fgets(buffer, sizeof(buffer), stdin) &&
+              sscanf(buffer, "%d", &num_etudiant) == 1) {
             if (rechercher_etudiant(db_etudiant, num_etudiant) == -1) {
               printf("Etudiant inexistant.\n");
               continue;
@@ -609,13 +621,15 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
             printf("Entree invalide.\n");
             continue;
           }
-          ajouter_notes_etudiant_toutes_matieres(db_note, num_etudiant, db_etudiant, &db_classe_matiere, db_matiere);
+          ajouter_notes_etudiant_toutes_matieres(
+              db_note, num_etudiant, db_etudiant, &db_classe_matiere,
+              db_matiere);
           exporter_notes_csv(chemin_notes, db_note);
-        }
-        else if (n == 4) { // Ajouter les notes d'une classe dans une matiere
+        } else if (n == 4) { // Ajouter les notes d'une classe dans une matiere
           int code_classe, ref_matiere;
           printf("Code classe : ");
-          if (fgets(buffer, sizeof(buffer), stdin) && sscanf(buffer, "%d", &code_classe) == 1) {
+          if (fgets(buffer, sizeof(buffer), stdin) &&
+              sscanf(buffer, "%d", &code_classe) == 1) {
             if (rechercher_classe(db_classe, code_classe) == -1) {
               printf("Classe inexistante.\n");
               continue;
@@ -625,7 +639,8 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
             continue;
           }
           printf("Reference matiere : ");
-          if (fgets(buffer, sizeof(buffer), stdin) && sscanf(buffer, "%d", &ref_matiere) == 1) {
+          if (fgets(buffer, sizeof(buffer), stdin) &&
+              sscanf(buffer, "%d", &ref_matiere) == 1) {
             if (rechercher_matiere(db_matiere, ref_matiere) == -1) {
               printf("Matiere inexistante.\n");
               continue;
@@ -634,17 +649,17 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
             printf("Entree invalide.\n");
             continue;
           }
-          ajouter_notes_classe_matiere(db_note, code_classe, ref_matiere, db_etudiant, &db_classe_matiere, db_matiere);
+          ajouter_notes_classe_matiere(db_note, code_classe, ref_matiere,
+                                       db_etudiant, &db_classe_matiere,
+                                       db_matiere);
           exporter_notes_csv(chemin_notes, db_note);
-        }
-        else if (n == 5) { // Supprimer une note
+        } else if (n == 5) { // Supprimer une note
           supprimer_note_interactive(db_note, chemin_notes);
-        }
-        else if (n == 6) { // Modifier une note
+        } else if (n == 6) { // Modifier une note
           modifier_note_interactive(db_note, chemin_notes);
-        }
-        else if (n == 7) { // Importer les notes depuis un CSV
-          importer_notes_interactive(db_note, chemin_notes, db_etudiant, db_matiere);
+        } else if (n == 7) { // Importer les notes depuis un CSV
+          importer_notes_interactive(db_note, chemin_notes, db_etudiant,
+                                     db_matiere);
         }
         // TODO: autres modes (3, 4, etc.)
       } while (n != 0);

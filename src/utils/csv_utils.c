@@ -18,14 +18,17 @@ int charger_matieres_csv(const char *chemin, MatiereDB *db) {
   while (fgets(ligne, sizeof(ligne), f)) {
     Matiere m;
     char *token = strtok(ligne, ",");
-    if (!token || strlen(token) == 0) continue;
+    if (!token || strlen(token) == 0)
+      continue;
     m.reference = atoi(token);
     token = strtok(NULL, ",");
-    if (!token || strlen(token) == 0) continue;
+    if (!token || strlen(token) == 0)
+      continue;
     strncpy(m.libelle, token, sizeof(m.libelle));
     m.libelle[sizeof(m.libelle) - 1] = 0;
     token = strtok(NULL, ",");
-    if (!token || strlen(token) == 0) continue;
+    if (!token || strlen(token) == 0)
+      continue;
     m.coeficient = atoi(token);
     ajouter_matiere(db, m);
     db->taille++;
@@ -34,23 +37,26 @@ int charger_matieres_csv(const char *chemin, MatiereDB *db) {
   return 0;
 }
 int charger_classe_matieres_csv(const char *chemin, ClasseMatiereDB *db) {
-    FILE *f = fopen(chemin, "r");
-    if (!f) return -1;
-    db->taille = 0;
-    char ligne[256];
-    fgets(ligne, sizeof(ligne), f); // ignore l'en-tete
-    while (fgets(ligne, sizeof(ligne), f)) {
-        char *token = strtok(ligne, ",");
-        if (!token || strlen(token) == 0) continue;
-        int code = atoi(token);
-        token = strtok(NULL, ",");
-        if (!token || strlen(token) == 0) continue;
-        int ref = atoi(token);
-        ClasseMatiere rel = {code, ref};
-        db->relations[db->taille++] = rel;
-    }
-    fclose(f);
-    return 0;
+  FILE *f = fopen(chemin, "r");
+  if (!f)
+    return -1;
+  db->taille = 0;
+  char ligne[256];
+  fgets(ligne, sizeof(ligne), f); // ignore l'en-tete
+  while (fgets(ligne, sizeof(ligne), f)) {
+    char *token = strtok(ligne, ",");
+    if (!token || strlen(token) == 0)
+      continue;
+    int code = atoi(token);
+    token = strtok(NULL, ",");
+    if (!token || strlen(token) == 0)
+      continue;
+    int ref = atoi(token);
+    ClasseMatiere rel = {code, ref};
+    db->relations[db->taille++] = rel;
+  }
+  fclose(f);
+  return 0;
 }
 
 int charger_classes_csv(const char *chemin, ClasseDB *db) {
@@ -69,14 +75,17 @@ int charger_classes_csv(const char *chemin, ClasseDB *db) {
   while (fgets(ligne, sizeof(ligne), f)) {
     Classe c;
     char *token = strtok(ligne, ",");
-    if (!token || strlen(token) == 0) continue;
+    if (!token || strlen(token) == 0)
+      continue;
     c.code = atoi(token);
     token = strtok(NULL, ",");
-    if (!token || strlen(token) == 0) continue;
+    if (!token || strlen(token) == 0)
+      continue;
     strncpy(c.nom, token, sizeof(c.nom));
     c.nom[sizeof(c.nom) - 1] = 0;
     token = strtok(NULL, ",");
-    if (!token || strlen(token) == 0) continue;
+    if (!token || strlen(token) == 0)
+      continue;
     c.niveau = strcmp(token, "LICENSE") == 0 ? LICENSE : MASTER;
     ajouter_classe(db, c);
     db->taille++;
@@ -87,37 +96,44 @@ int charger_classes_csv(const char *chemin, ClasseDB *db) {
 
 int charger_etudiants_csv(const char *chemin, EtudiantDB *db) {
   FILE *f = fopen(chemin, "r");
-  if (!f) return -1;
+  if (!f)
+    return -1;
   char ligne[256];
   db->taille = 0;
   fgets(ligne, sizeof(ligne), f); // ignore l'en-tete
   while (fgets(ligne, sizeof(ligne), f)) {
     Etudiant e;
     char *token = strtok(ligne, ",");
-    if (!token) continue;
+    if (!token)
+      continue;
     e.numero = atoi(token);
     token = strtok(NULL, ",");
-    if (!token) continue;
+    if (!token)
+      continue;
     strncpy(e.nom, token, sizeof(e.nom));
     e.nom[sizeof(e.nom) - 1] = 0;
     token = strtok(NULL, ",");
-    if (!token) continue;
+    if (!token)
+      continue;
     strncpy(e.prenom, token, sizeof(e.prenom));
     e.prenom[sizeof(e.prenom) - 1] = 0;
     token = strtok(NULL, ",");
-    if (!token) continue;
+    if (!token)
+      continue;
     strncpy(e.email, token, sizeof(e.email));
     e.email[sizeof(e.email) - 1] = 0;
     token = strtok(NULL, ",");
-    if (!token) continue;
+    if (!token)
+      continue;
     // Date au format jj/mm/aaaa
-    int j=0, m=0, a=0;
+    int j = 0, m = 0, a = 0;
     sscanf(token, "%d/%d/%d", &j, &m, &a);
     e.date_naissance.jour = j;
     e.date_naissance.mois = m;
     e.date_naissance.annee = a;
     token = strtok(NULL, ",");
-    if (!token) continue;
+    if (!token)
+      continue;
     e.classe_code = atoi(token);
     db->etudiants[db->taille++] = e;
   }
@@ -203,8 +219,8 @@ int exporter_etudiants_csv(const char *chemin, const EtudiantDB *db) {
   fprintf(f, "numero,nom,prenom,email,date_naissance,classe_code\n");
   for (int i = 0; i < db->taille; i++) {
     Etudiant *e = &db->etudiants[i];
-    fprintf(f, "%d,%s,%s,%s,%02d/%02d/%04d,%d\n", e->numero, e->nom, e->prenom, e->email,
-            e->date_naissance.jour, e->date_naissance.mois,
+    fprintf(f, "%d,%s,%s,%s,%02d/%02d/%04d,%d\n", e->numero, e->nom, e->prenom,
+            e->email, e->date_naissance.jour, e->date_naissance.mois,
             e->date_naissance.annee, e->classe_code);
   }
   fclose(f);
@@ -227,37 +243,40 @@ int exporter_notes_csv(const char *chemin, const NoteDB *db) {
   return 0;
 }
 
-int exporter_classe_matieres_csv(const char *chemin, const ClasseMatiereDB *db, const ClasseDB *db_classe, const MatiereDB *db_matiere) {
-    FILE *f = fopen(chemin, "w");
-    if (!f) return -1;
-    for (size_t i = 0; i < db->taille; i++) {
-        ClasseMatiere rel = db->relations[i];
-        // Recherche classe
-        int idx_c = -1;
-        for (size_t j = 0; j < db_classe->taille; j++) {
-            if (db_classe->classes[j].code == rel.code_classe) {
-                idx_c = j;
-                break;
-            }
-        }
-        // Recherche matiere
-        int idx_m = -1;
-        for (size_t j = 0; j < db_matiere->taille; j++) {
-            if (db_matiere->matieres[j].reference == rel.reference_matiere) {
-                idx_m = j;
-                break;
-            }
-        }
-        if (idx_c != -1 && idx_m != -1) {
-            Classe c = db_classe->classes[idx_c];
-            Matiere m = db_matiere->matieres[idx_m];
-            fprintf(f, "%d,%d,%s,%s,%s,%d\n", c.code, m.reference, c.nom, c.niveau == LICENSE ? "LICENSE" : "MASTER", m.libelle, m.coeficient);
-        }
+int exporter_classe_matieres_csv(const char *chemin, const ClasseMatiereDB *db,
+                                 const ClasseDB *db_classe,
+                                 const MatiereDB *db_matiere) {
+  FILE *f = fopen(chemin, "w");
+  if (!f)
+    return -1;
+  for (size_t i = 0; i < db->taille; i++) {
+    ClasseMatiere rel = db->relations[i];
+    // Recherche classe
+    int idx_c = -1;
+    for (size_t j = 0; j < db_classe->taille; j++) {
+      if (db_classe->classes[j].code == rel.code_classe) {
+        idx_c = j;
+        break;
+      }
     }
-    fclose(f);
-    return 0;
+    // Recherche matiere
+    int idx_m = -1;
+    for (size_t j = 0; j < db_matiere->taille; j++) {
+      if (db_matiere->matieres[j].reference == rel.reference_matiere) {
+        idx_m = j;
+        break;
+      }
+    }
+    if (idx_c != -1 && idx_m != -1) {
+      Classe c = db_classe->classes[idx_c];
+      Matiere m = db_matiere->matieres[idx_m];
+      fprintf(f, "%d,%d,%s,%s,%s,%d\n", c.code, m.reference, c.nom,
+              c.niveau == LICENSE ? "LICENSE" : "MASTER", m.libelle,
+              m.coeficient);
+    }
+  }
+  fclose(f);
+  return 0;
 }
 
-
 // TODO: Gestions des erreurs de format CSV
-

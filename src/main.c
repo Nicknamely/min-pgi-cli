@@ -3,10 +3,8 @@
 #include "./matiere/matiere.h"
 #include "./note/note.h"
 #include "affichage/application.h"
-#include "ui/menu.h"
 #include "utils/csv_utils.h"
 #include "utils/init.h"
-#include <errno.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -19,7 +17,8 @@ int main() {
 
   int mode = 0;
   // Demande a l'utilisateur s'il veut creer ou importer une session
-  printf("1. Creer une nouvelle session\n2. Importer une session existante\nChoix : ");
+  printf("1. Creer une nouvelle session\n2. Importer une session "
+         "existante\nChoix : ");
   scanf("%d", &mode);
   getchar();
 
@@ -48,10 +47,12 @@ int main() {
   char chemin_notes[160];
   char chemin_associations[160];
 
-  initialiser_session(chemin_session, chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes, chemin_associations);
+  initialiser_session(chemin_session, chemin_classes, chemin_matieres,
+                      chemin_etudiants, chemin_notes, chemin_associations);
 
   // Creation des fichiers CSV si besoin (nouvelle session)
-  creer_csv_session(chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes, chemin_associations);
+  creer_csv_session(chemin_classes, chemin_matieres, chemin_etudiants,
+                    chemin_notes, chemin_associations);
 
   // Initialisation des bases de donnees dynamiques
   ClasseDB db_classe;
@@ -71,7 +72,8 @@ int main() {
     int ok1 = charger_classes_csv(chemin_classes, &db_classe);
     int ok2 = charger_matieres_csv(chemin_matieres, &db_matiere);
     int ok3 = charger_etudiants_csv(chemin_etudiants, &db_etudiant);
-    int ok4 = charger_notes_csv(chemin_notes, &db_note, &db_etudiant, &db_matiere);
+    int ok4 =
+        charger_notes_csv(chemin_notes, &db_note, &db_etudiant, &db_matiere);
 
     // Affichage d'un message si un fichier est manquant ou vide
     if (ok1 != 0)
@@ -86,7 +88,8 @@ int main() {
 
   // Lancement de l'application principale (menus, gestion)
   afficher_application(&db_classe, &db_matiere, &db_etudiant, &db_note,
-                      chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes);
+                       chemin_classes, chemin_matieres, chemin_etudiants,
+                       chemin_notes);
 
   // Liberation de la memoire allouee pour les bases de donnees
   freeClasseDB(&db_classe);

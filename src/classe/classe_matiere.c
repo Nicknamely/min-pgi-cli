@@ -66,7 +66,8 @@ void afficher_classe_matieres(const ClasseMatiereDB *db) {
   printf("+-----+------------+-----------------+\n");
   for (size_t i = 0; i < db->taille; i++) {
     ClasseMatiere rel = db->relations[i];
-    printf("| %3zu | %10d | %13d |\n", i, rel.code_classe, rel.reference_matiere);
+    printf("| %3zu | %10d | %13d |\n", i, rel.code_classe,
+           rel.reference_matiere);
   }
   printf("+-----+------------+-----------------+\n");
 }
