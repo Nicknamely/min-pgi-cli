@@ -182,5 +182,49 @@ int exporter_notes_csv(const char *chemin, const NoteDB *db) {
   return 0;
 }
 
+int exporter_classe_matieres_csv(const char *chemin, const ClasseMatiereDB *db, const ClasseDB *db_classe, const MatiereDB *db_matiere) {
+    FILE *f = fopen(chemin, "w");
+    if (!f) return -1;
+    for (size_t i = 0; i < db->taille; i++) {
+        ClasseMatiere rel = db->relations[i];
+        // Recherche classe
+        int idx_c = -1;
+        for (size_t j = 0; j < db_classe->taille; j++) {
+            if (db_classe->classes[j].code == rel.code_classe) {
+                idx_c = j;
+                break;
+            }
+        }
+        // Recherche matiere
+        int idx_m = -1;
+        for (size_t j = 0; j < db_matiere->taille; j++) {
+            if (db_matiere->matieres[j].reference == rel.reference_matiere) {
+                idx_m = j;
+                break;
+            }
+        }
+        if (idx_c != -1 && idx_m != -1) {
+            Classe c = db_classe->classes[idx_c];
+            Matiere m = db_matiere->matieres[idx_m];
+            fprintf(f, "%d,%d,%s,%s,%s,%d\n", c.code, m.reference, c.nom, c.niveau == LICENSE ? "LICENSE" : "MASTER", m.libelle, m.coeficient);
+        }
+    }
+    fclose(f);
+    return 0;
+}
+
+int charger_classe_matieres_csv(const char *chemin, ClasseMatiereDB *db) {
+    FILE *f = fopen(chemin, "r");
+    if (!f) return -1;
+    db->taille = 0;
+    int code, ref;
+    while (fscanf(f, "%d,%d\n", &code, &ref) == 2) {
+        ClasseMatiere rel = {code, ref};
+        db->relations[db->taille++] = rel;
+    }
+    fclose(f);
+    return 0;
+}
+
 // TODO: Gestions des erreurs de format CSV
 
