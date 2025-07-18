@@ -42,11 +42,15 @@ void afficher_classes(const ClasseDB *db) {
     printf("Aucune classe a afficher.\n");
     return;
   }
+  printf("+-----+-------+----------------------+----------+\n");
+  printf("| Idx | Code  | Nom                  | Niveau   |\n");
+  printf("+-----+-------+----------------------+----------+\n");
   for (size_t i = 0; i < db->taille; i++) {
     Classe c = db->classes[i];
-    printf("[%zu] %d | %s | %s\n", i, c.code, c.nom,
+    printf("| %3zu | %5d | %-20s | %-8s |\n", i, c.code, c.nom,
            c.niveau == LICENSE ? "LICENSE" : "MASTER");
   }
+  printf("+-----+-------+----------------------+----------+\n");
 }
 
 void modifier_classe(ClasseDB *db, size_t index, Classe nouvelle_classe) {

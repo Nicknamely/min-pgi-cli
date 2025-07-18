@@ -43,10 +43,15 @@ void afficher_matieres(const MatiereDB *db) {
     printf("Aucune matiere a afficher.\n");
     return;
   }
+  printf("+-----+-----------+----------------------+-------------+\n");
+  printf("| Idx | Reference | Libelle              | Coefficient |\n");
+  printf("+-----+-----------+----------------------+-------------+\n");
   for (size_t i = 0; i < db->taille; i++) {
     Matiere m = db->matieres[i];
-    printf("[%zu] %d | %s | %d\n", i, m.reference, m.libelle, m.coeficient);
+    printf("| %3zu | %9d | %-20s | %11d |\n", i, m.reference, m.libelle,
+           m.coeficient);
   }
+  printf("+-----+-----------+----------------------+-------------+\n");
 }
 
 void modifier_matiere(MatiereDB *db, size_t index, Matiere nouvelle_matiere) {

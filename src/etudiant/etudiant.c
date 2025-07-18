@@ -50,10 +50,14 @@ void afficher_etudiants(const EtudiantDB *db) {
     printf("Aucun etudiant a afficher.\n");
     return;
   }
+  printf("+-----+--------+----------------------+----------------------+----------------------+------------+------------+------------+-------------+\n");
+  printf("| Idx | Numero | Nom                  | Prenom               | Email                | Naissance  | ClasseCode |\n");
+  printf("+-----+--------+----------------------+----------------------+----------------------+------------+------------+------------+-------------+\n");
   for (size_t i = 0; i < db->taille; i++) {
     Etudiant e = db->etudiants[i];
-    printf("%d,%s,%s,%s,%02d/%02d/%04d,%d\n", e.numero, e.nom, e.prenom, e.email, e.date_naissance.jour, e.date_naissance.mois, e.date_naissance.annee, e.classe_code);
+    printf("| %3zu | %6d | %-20s | %-20s | %-20s | %02d/%02d/%04d | %10d |\n", i, e.numero, e.nom, e.prenom, e.email, e.date_naissance.jour, e.date_naissance.mois, e.date_naissance.annee, e.classe_code);
   }
+  printf("+-----+--------+----------------------+----------------------+----------------------+------------+------------+------------+-------------+\n");
 }
 
 void modifier_etudiant(EtudiantDB *db, size_t index, Etudiant nouvel_etudiant) {

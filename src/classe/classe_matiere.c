@@ -57,11 +57,14 @@ void afficher_classe_matieres(const ClasseMatiereDB *db) {
     printf("Aucune relation classe-matiere a afficher.\n");
     return;
   }
+  printf("+-----+------------+-----------------+\n");
+  printf("| Idx | CodeClasse | RefMatiere      |\n");
+  printf("+-----+------------+-----------------+\n");
   for (size_t i = 0; i < db->taille; i++) {
     ClasseMatiere rel = db->relations[i];
-    printf("[%zu] Classe: %d | Matiere: %d\n", i, rel.code_classe,
-           rel.reference_matiere);
+    printf("| %3zu | %10d | %13d |\n", i, rel.code_classe, rel.reference_matiere);
   }
+  printf("+-----+------------+-----------------+\n");
 }
 
 int rechercher_classe_matiere(const ClasseMatiereDB *db, int code_classe,
