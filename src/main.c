@@ -7,5 +7,6 @@
 
 int main() {
   printf("Compilation reussie\n");
+  hellow();
   return EXIT_SUCCESS;
 }
