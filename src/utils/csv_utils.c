@@ -67,38 +67,17 @@ int charger_classes_csv(const char *chemin, ClasseDB *db) {
 
 int charger_etudiants_csv(const char *chemin, EtudiantDB *db) {
   FILE *f = fopen(chemin, "r");
-  if (!f) {
-    // Fichier absent
-    return -1;
-  }
-  char ligne[256];
+  if (!f) return -1;
+  char ligne[128];
+  fgets(ligne, sizeof(ligne), f); // ignore l'en-tête
+  db->taille = 0;
   while (fgets(ligne, sizeof(ligne), f)) {
     Etudiant e;
-    char *token = strtok(ligne, ",");
-    if (!token)
-      continue;
-    e.numero = atoi(token);
-    token = strtok(NULL, ",");
-    if (!token)
-      continue;
-    strncpy(e.nom, token, sizeof(e.nom));
-    e.nom[sizeof(e.nom) - 1] = 0;
-    token = strtok(NULL, ",");
-    if (!token)
-      continue;
-    strncpy(e.prenom, token, sizeof(e.prenom));
-    e.prenom[sizeof(e.prenom) - 1] = 0;
-    token = strtok(NULL, ",");
-    if (!token)
-      continue;
-    strncpy(e.email, token, sizeof(e.email));
-    e.email[sizeof(e.email) - 1] = 0;
-    token = strtok(NULL, ",");
-    if (!token)
-      continue;
-    sscanf(token, "%d-%d-%d", &e.date_naissance.annee, &e.date_naissance.mois,
-           &e.date_naissance.jour);
-    ajouter_etudiant(db, e);
+    char date[20];
+    sscanf(ligne, "%d,%29[^,],%19[^,],%19[^,],%19[^,],%d/%d/%d,%d",
+           &e.numero, e.nom, e.prenom, e.email, date,
+           &e.date_naissance.jour, &e.date_naissance.mois, &e.date_naissance.annee, &e.classe_code);
+    db->etudiants[db->taille++] = e;
   }
   fclose(f);
   return 0;
@@ -176,12 +155,12 @@ int exporter_etudiants_csv(const char *chemin, const EtudiantDB *db) {
     printf("Erreur ouverture %s pour ecrire les etudiants\n", chemin);
     return -1;
   }
-  fprintf(f, "numero,nom,prenom,email,jour,mois,annee\n");
+  fprintf(f, "numero,nom,prenom,email,jour,mois,annee,classe_code\n");
   for (int i = 0; i < db->taille; i++) {
     Etudiant *e = &db->etudiants[i];
-    fprintf(f, "%d,%s,%s,%s,%d,%d,%d\n", e->numero, e->nom, e->prenom, e->email,
+    fprintf(f, "%d,%s,%s,%s,%d,%d,%d,%d\n", e->numero, e->nom, e->prenom, e->email,
             e->date_naissance.jour, e->date_naissance.mois,
-            e->date_naissance.annee);
+            e->date_naissance.annee, e->classe_code);
   }
   fclose(f);
   return 0;
