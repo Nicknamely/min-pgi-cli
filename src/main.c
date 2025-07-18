@@ -12,22 +12,25 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-// Point d'entree principal
 int main() {
+  // Declaration des variables pour la session
   char nom_session[64];
   char chemin_session[128];
 
   int mode = 0;
+  // Demande a l'utilisateur s'il veut creer ou importer une session
   printf("1. Creer une nouvelle session\n2. Importer une session existante\nChoix : ");
   scanf("%d", &mode);
   getchar();
 
   int ok = -1;
   if (mode == 1) {
+    // Creation d'une nouvelle session, boucle si le nom existe deja
     do {
       ok = creer_repertoire_session(nom_session, chemin_session);
     } while (ok == -2);
   } else {
+    // Import d'une session existante, verification du dossier
     printf("Chemin du dossier de session a importer : ");
     fgets(chemin_session, sizeof(chemin_session), stdin);
     chemin_session[strcspn(chemin_session, "\n")] = 0;
@@ -38,22 +41,19 @@ int main() {
     }
   }
 
-  // Construction des chemins CSV
+  // Construction et initialisation des chemins/fichiers CSV pour la session
   char chemin_classes[160];
   char chemin_matieres[160];
   char chemin_etudiants[160];
   char chemin_notes[160];
   char chemin_associations[160];
 
-  snprintf(chemin_classes, sizeof(chemin_classes), "%s/classes.csv", chemin_session);
-  snprintf(chemin_matieres, sizeof(chemin_matieres), "%s/matieres.csv", chemin_session);
-  snprintf(chemin_etudiants, sizeof(chemin_etudiants), "%s/etudiants.csv", chemin_session);
-  snprintf(chemin_notes, sizeof(chemin_notes), "%s/notes.csv", chemin_session);
-  snprintf(chemin_associations, sizeof(chemin_associations), "%s/matiere_clas_asso.csv", chemin_session);
+  initialiser_session(chemin_session, chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes, chemin_associations);
 
+  // Creation des fichiers CSV si besoin (nouvelle session)
   creer_csv_session(chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes, chemin_associations);
 
-  // Initialisation des bases de donnees
+  // Initialisation des bases de donnees dynamiques
   ClasseDB db_classe;
   initialiser_ClasseDB(&db_classe, 10);
 
@@ -66,13 +66,14 @@ int main() {
   NoteDB db_note;
   initialiser_NoteDB(&db_note, 10);
 
-  // Chargement des fichiers CSV si import
   if (mode == 2) {
+    // Chargement des donnees depuis les CSV si import
     int ok1 = charger_classes_csv(chemin_classes, &db_classe);
     int ok2 = charger_matieres_csv(chemin_matieres, &db_matiere);
     int ok3 = charger_etudiants_csv(chemin_etudiants, &db_etudiant);
     int ok4 = charger_notes_csv(chemin_notes, &db_note, &db_etudiant, &db_matiere);
 
+    // Affichage d'un message si un fichier est manquant ou vide
     if (ok1 != 0)
       printf("Attention : classes.csv manquant ou vide.\n");
     if (ok2 != 0)
@@ -83,9 +84,11 @@ int main() {
       printf("Attention : notes.csv manquant ou vide.\n");
   }
 
+  // Lancement de l'application principale (menus, gestion)
   afficher_application(&db_classe, &db_matiere, &db_etudiant, &db_note,
                       chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes);
 
+  // Liberation de la memoire allouee pour les bases de donnees
   freeClasseDB(&db_classe);
   freeMatiereDB(&db_matiere);
   freeEtudiantDB(&db_etudiant);

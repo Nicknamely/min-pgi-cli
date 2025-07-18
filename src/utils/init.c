@@ -5,7 +5,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-// Création du répertoire de session
+// Creation du repertoire de session
 int creer_repertoire_session(char *nom_session, char *chemin_complet) {
   printf("Nom de la session : ");
   fgets(nom_session, 64, stdin);
@@ -32,7 +32,7 @@ int creer_repertoire_session(char *nom_session, char *chemin_complet) {
   }
 }
 
-// Création des fichiers CSV pour la session
+// Creation des fichiers CSV pour la session
 void creer_csv_session(const char *chemin_classes, const char *chemin_matieres,
                        const char *chemin_etudiants, const char *chemin_notes, const char *chemin_associations) {
   FILE *f;
@@ -59,7 +59,7 @@ void creer_csv_session(const char *chemin_classes, const char *chemin_matieres,
     fclose(f);
   }
 
-  // Création du CSV étudiants avec le champ classe_code
+  // Creation du CSV etudiants avec le champ classe_code
   f = fopen(chemin_etudiants, "r");
   if (!f) {
     f = fopen(chemin_etudiants, "w");
@@ -80,7 +80,7 @@ void creer_csv_session(const char *chemin_classes, const char *chemin_matieres,
     fclose(f);
   }
 
-  // Création du CSV associations classe-matiere
+  // Creation du CSV associations classe-matiere
   f = fopen(chemin_associations, "r");
   if (!f) {
     f = fopen(chemin_associations, "w");
@@ -91,4 +91,19 @@ void creer_csv_session(const char *chemin_classes, const char *chemin_matieres,
   } else {
     fclose(f);
   }
+}
+
+// Genere les chemins des fichiers CSV pour une session
+void generer_chemins_csv(const char *base, char *chemin_classes, char *chemin_matieres, char *chemin_etudiants, char *chemin_notes, char *chemin_associations) {
+  snprintf(chemin_classes, 160, "%s/classes.csv", base);
+  snprintf(chemin_matieres, 160, "%s/matieres.csv", base);
+  snprintf(chemin_etudiants, 160, "%s/etudiants.csv", base);
+  snprintf(chemin_notes, 160, "%s/notes.csv", base);
+  snprintf(chemin_associations, 160, "%s/matiere_clas_asso.csv", base);
+}
+
+// Initialise une session : genere les chemins et cree les fichiers CSV si besoin
+void initialiser_session(const char *base, char *chemin_classes, char *chemin_matieres, char *chemin_etudiants, char *chemin_notes, char *chemin_associations) {
+  generer_chemins_csv(base, chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes, chemin_associations);
+  creer_csv_session(chemin_classes, chemin_matieres, chemin_etudiants, chemin_notes, chemin_associations);
 }
