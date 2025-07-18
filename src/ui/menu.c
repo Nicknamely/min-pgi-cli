@@ -1,6 +1,6 @@
 #include "menu.h"
 #include "../classe/classe_matiere.h"
-#include "../utils/csv_classe_matiere.h"
+#include "../utils/csv_utils.h"
 #include <stdio.h>
 
 void menu_principal() {
@@ -21,7 +21,8 @@ void menu_classes() {
 
 void menu_matieres() {
   printf("\n--- MATIERES ---\n");
-  printf("1. Afficher\n2. Ajouter\n3. Supprimer\n4. Modifier\n5. Association Classe\n6. Charger CSV\n0. Retour\nChoix : ");
+  printf("1. Afficher\n2. Ajouter\n3. Supprimer\n4. Modifier\n5. Association "
+         "Classe\n6. Charger CSV\n0. Retour\nChoix : ");
 }
 
 void menu_etudiants() {
@@ -37,40 +38,11 @@ void menu_notes() {
          "Modifier\n7. Charger CSV\n0. Retour\nChoix : ");
 }
 
-void menu_classe_matiere(ClasseMatiereDB *db, ClasseDB *classeDB, MatiereDB *matiereDB) {
-    int choix;
-    do {
-        printf("\n--- ASSOCIATION CLASSE-MATIERE ---\n");
-        printf("1. Afficher les associations\n");
-        printf("2. Associer une matière à une classe\n");
-        printf("3. Dissocier une matière d'une classe\n");
-        printf("0. Retour\n");
-        printf("Votre choix : ");
-        scanf("%d", &choix);
-        getchar();
-
-        if (choix == 1) {
-            afficher_classe_matieres(db);
-        } else if (choix == 2) {
-            ClasseMatiere rel;
-            printf("Code classe : ");
-            scanf("%d", &rel.code_classe);
-            getchar();
-            printf("Référence matière : ");
-            scanf("%d", &rel.reference_matiere);
-            getchar();
-            if (ajouter_classe_matiere(db, rel, classeDB, matiereDB))
-                printf("Association ajoutée.\n");
-            // Exporter après ajout
-            exporter_classe_matieres_csv("./donnees/matiere_clas_asso.csv", db, classeDB, matiereDB);
-        } else if (choix == 3) {
-            printf("Index à dissocier : ");
-            int idx;
-            scanf("%d", &idx);
-            getchar();
-            supprimer_classe_matiere(db, idx);
-            // Exporter après suppression
-            exporter_classe_matieres_csv("./donnees/matiere_clas_asso.csv", db, classeDB, matiereDB);
-        }
-    } while (choix != 0);
+void menu_classe_matiere() {
+  printf("\n--- ASSOCIATION CLASSE-MATIERE ---\n");
+  printf("1. Afficher les associations\n");
+  printf("2. Associer une matiere a une classe\n");
+  printf("3. Dissocier une matiere d'une classe\n");
+  printf("0. Retour\n");
+  printf("Votre choix : ");
 }

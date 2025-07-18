@@ -1,6 +1,5 @@
 #include "application.h"
 #include "../ui/menu.h"
-#include "../utils/csv_classe_matiere.h"
 #include "../utils/csv_utils.h"
 #include <stdio.h>
 #include <string.h>
@@ -265,8 +264,61 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
           modifier_matiere(db_matiere, idx, mat);
           exporter_matieres_csv(chemin_matieres, db_matiere);
         } else if (m == 5) {
-          // Sous-menu d'association classe-matière
-          menu_classe_matiere(&db_classe_matiere, db_classe, db_matiere);
+          int choix_asso;
+          do {
+            menu_classe_matiere();
+            if (fgets(buffer, sizeof(buffer), stdin)) {
+              if (sscanf(buffer, "%d", &choix_asso) != 1) {
+                printf("Entree invalide. Veuillez entrer un nombre valide.\n");
+                continue;
+              }
+            } else {
+              printf("Erreur lors de la lecture de l'entree.\n");
+              continue;
+            }
+            if (choix_asso == 1) {
+              afficher_classe_matieres(&db_classe_matiere);
+            } else if (choix_asso == 2) {
+              ClasseMatiere rel;
+              printf("Code classe : ");
+              if (fgets(buffer, sizeof(buffer), stdin)) {
+                if (sscanf(buffer, "%d", &rel.code_classe) != 1) {
+                  printf("Entree invalide. Veuillez entrer un code valide.\n");
+                  continue;
+                }
+              } else {
+                printf("Erreur lors de la lecture de l'entree.\n");
+                continue;
+              }
+              printf("Reference matiere : ");
+              if (fgets(buffer, sizeof(buffer), stdin)) {
+                if (sscanf(buffer, "%d", &rel.reference_matiere) != 1) {
+                  printf("Entree invalide. Veuillez entrer une reference valide.\n");
+                  continue;
+                }
+              } else {
+                printf("Erreur lors de la lecture de l'entree.\n");
+                continue;
+              }
+              if (ajouter_classe_matiere(&db_classe_matiere, rel, db_classe, db_matiere))
+                printf("Association ajoutee.\n");
+              exporter_classe_matieres_csv(chemin_matieres, &db_classe_matiere, db_classe, db_matiere);
+            } else if (choix_asso == 3) {
+              printf("Index a dissocier : ");
+              int idx;
+              if (fgets(buffer, sizeof(buffer), stdin)) {
+                if (sscanf(buffer, "%d", &idx) != 1) {
+                  printf("Entree invalide. Veuillez entrer un index valide.\n");
+                  continue;
+                }
+              } else {
+                printf("Erreur lors de la lecture de l'entree.\n");
+                continue;
+              }
+              supprimer_classe_matiere(&db_classe_matiere, idx);
+              exporter_classe_matieres_csv(chemin_matieres, &db_classe_matiere, db_classe, db_matiere);
+            }
+          } while (choix_asso != 0);
         } else if (m == 6) {
           printf("Chemin du CSV : ");
           char chemin[128];
@@ -339,10 +391,13 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
           printf("Email: ");
           if (fgets(et.email, sizeof(et.email), stdin)) {
             et.email[strcspn(et.email, "\n")] = 0;
-            // Vider le buffer si trop long: Sinon il sera impossible de saisir le numero de la classe
-            if (strchr(et.email, '\0') == &et.email[sizeof(et.email)-1] && et.email[sizeof(et.email)-2] != '\n') {
+            // Vider le buffer si trop long: Sinon il sera impossible de saisir
+            // le numero de la classe
+            if (strchr(et.email, '\0') == &et.email[sizeof(et.email) - 1] &&
+                et.email[sizeof(et.email) - 2] != '\n') {
               int c;
-              while ((c = getchar()) != '\n' && c != EOF);
+              while ((c = getchar()) != '\n' && c != EOF)
+                ;
             }
           } else {
             printf("Erreur lors de la lecture de l'entree.\n");
@@ -452,9 +507,11 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
           if (fgets(et.email, sizeof(et.email), stdin)) {
             et.email[strcspn(et.email, "\n")] = 0;
             // Vider le buffer si trop long
-            if (strchr(et.email, '\0') == &et.email[sizeof(et.email)-1] && et.email[sizeof(et.email)-2] != '\n') {
+            if (strchr(et.email, '\0') == &et.email[sizeof(et.email) - 1] &&
+                et.email[sizeof(et.email) - 2] != '\n') {
               int c;
-              while ((c = getchar()) != '\n' && c != EOF);
+              while ((c = getchar()) != '\n' && c != EOF)
+                ;
             }
           } else {
             printf("Erreur lors de la lecture de l'entree.\n");

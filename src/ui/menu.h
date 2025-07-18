@@ -10,6 +10,6 @@ void menu_classes();
 void menu_matieres();
 void menu_etudiants();
 void menu_notes();
-void menu_classe_matiere(ClasseMatiereDB *db, ClasseDB *classeDB, MatiereDB *matiereDB);
+void menu_classe_matiere();
 
 #endif // UI_MENU_H
