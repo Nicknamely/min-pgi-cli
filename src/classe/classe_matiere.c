@@ -13,7 +13,7 @@ void initialiser_ClasseMatiereDB(ClasseMatiereDB *db, size_t capacite_initial) {
   db->capacite = capacite_initial;
 }
 
-// Ajout sécurisé : vérifie que la classe et la matière existent
+// Ajout securise : verifie que la classe et la matiere existent
 int ajouter_classe_matiere(ClasseMatiereDB *db, ClasseMatiere nouvelle_relation,
                            const ClasseDB *classeDB,
                            const MatiereDB *matiereDB) {
@@ -26,6 +26,7 @@ int ajouter_classe_matiere(ClasseMatiereDB *db, ClasseMatiere nouvelle_relation,
     printf("Matiere inexistante !\n");
     return 0;
   }
+  // Agrandit le tableau si besoin
   if (db->taille == db->capacite) {
     size_t nouvelle_capacite = db->capacite * 2;
     ClasseMatiere *temp =
@@ -42,10 +43,12 @@ int ajouter_classe_matiere(ClasseMatiereDB *db, ClasseMatiere nouvelle_relation,
 }
 
 void supprimer_classe_matiere(ClasseMatiereDB *db, size_t index) {
+  // Verifie la validite de l'index
   if (index >= db->taille) {
     fprintf(stderr, "Index invalide\n");
     return;
   }
+  // Decale les elements pour combler le trou
   for (size_t i = index; i < db->taille - 1; i++) {
     db->relations[i] = db->relations[i + 1];
   }
@@ -57,6 +60,7 @@ void afficher_classe_matieres(const ClasseMatiereDB *db) {
     printf("Aucune relation classe-matiere a afficher.\n");
     return;
   }
+  // Affichage du tableau formate
   printf("+-----+------------+-----------------+\n");
   printf("| Idx | CodeClasse | RefMatiere      |\n");
   printf("+-----+------------+-----------------+\n");
@@ -69,6 +73,7 @@ void afficher_classe_matieres(const ClasseMatiereDB *db) {
 
 int rechercher_classe_matiere(const ClasseMatiereDB *db, int code_classe,
                               int reference_matiere) {
+  // Recherche sequentielle par code et reference
   for (size_t i = 0; i < db->taille; i++) {
     if (db->relations[i].code_classe == code_classe &&
         db->relations[i].reference_matiere == reference_matiere) {

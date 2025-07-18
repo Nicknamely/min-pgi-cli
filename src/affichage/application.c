@@ -13,16 +13,16 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
                           const char *chemin_notes) {
   int choix;
 
-  // Déclaration de la base de données des associations classe-matière
+  // Declaration de la base de donnees des associations classe-matiere
   static ClasseMatiereDB db_classe_matiere;
-  // Initialisation si nécessaire (à adapter selon le flux du programme)
+  // Initialisation si necessaire (a adapter selon le flux du programme)
   if (db_classe_matiere.relations == NULL) {
     initialiser_ClasseMatiereDB(&db_classe_matiere, 10);
-    // Chargement automatique des associations à l'ouverture de la session
+    // Chargement automatique des associations a l'ouverture de la session
     charger_classe_matieres_csv("docs/samples/matiere_clas_asso.csv", &db_classe_matiere);
   }
 
-  /* Utilisation de fgets() et sscanf() pour error handling et securite */
+  // Utilisation de fgets() et sscanf() pour error handling et securite
   do {
     menu_principal();
     char buffer[128];
@@ -168,7 +168,7 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
 
         else if (m == 2) {
           if (db_classe->taille == 0) {
-            printf("Aucune classe existante. Veuillez d'abord créer une "
+            printf("Aucune classe existante. Veuillez d'abord creer une "
                    "classe.\n");
             break;
           }
@@ -351,12 +351,12 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
 
         else if (e == 2) {
           if (db_classe->taille == 0) {
-            printf("Aucune classe existante. Veuillez d'abord créer une "
+            printf("Aucune classe existante. Veuillez d'abord creer une "
                    "classe.\n");
             break;
           }
           Etudiant et;
-          printf("Numéro : ");
+          printf("Numero : ");
           if (fgets(buffer, sizeof(buffer), stdin)) {
             if (sscanf(buffer, "%d", &et.numero) != 1) {
               printf("Entree invalide. Veuillez entrer un numero valide.\n");
@@ -406,8 +406,8 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
             continue;
           }
 
-          // Sélection de la classe
-          printf("Sélectionnez la classe à associer :\n");
+          // Selection de la classe
+          printf("Selectionnez la classe a associer :\n");
           for (size_t i = 0; i < db_classe->taille; i++) {
             printf("  %zu. %s (code %d)\n", i + 1, db_classe->classes[i].nom,
                    db_classe->classes[i].code);
@@ -423,7 +423,7 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
             printf("Erreur lors de la lecture de l'entree.\n");
             continue;
           }
-          // Vérifier que le code existe
+          // Verifier que le code existe
           int trouve = 0;
           for (size_t i = 0; i < db_classe->taille; i++) {
             if (db_classe->classes[i].code == code_classe) {
@@ -554,7 +554,7 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
           printf("Erreur lors de la lecture de l'entree.\n");
           continue;
         }
-        if (n == 2) { // Ajouter une note (étudiant)
+        if (n == 2) { // Ajouter une note (etudiant)
           int num_etudiant, ref_matiere;
           float noteCC, noteDS;
           printf("Numero etudiant : ");
@@ -597,7 +597,7 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
             printf("Erreur lors de l'ajout de la note.\n");
           }
         }
-        else if (n == 3) { // Ajouter les notes d'un étudiant dans toutes ses matières
+        else if (n == 3) { // Ajouter les notes d'un etudiant dans toutes ses matieres
           int num_etudiant;
           printf("Numero etudiant : ");
           if (fgets(buffer, sizeof(buffer), stdin) && sscanf(buffer, "%d", &num_etudiant) == 1) {
@@ -612,7 +612,7 @@ void afficher_application(ClasseDB *db_classe, MatiereDB *db_matiere,
           ajouter_notes_etudiant_toutes_matieres(db_note, num_etudiant, db_etudiant, &db_classe_matiere, db_matiere);
           exporter_notes_csv(chemin_notes, db_note);
         }
-        else if (n == 4) { // Ajouter les notes d'une classe dans une matière
+        else if (n == 4) { // Ajouter les notes d'une classe dans une matiere
           int code_classe, ref_matiere;
           printf("Code classe : ");
           if (fgets(buffer, sizeof(buffer), stdin) && sscanf(buffer, "%d", &code_classe) == 1) {

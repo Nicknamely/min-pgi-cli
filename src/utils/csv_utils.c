@@ -60,7 +60,7 @@ int charger_classes_csv(const char *chemin, ClasseDB *db) {
     return -1;
   }
   db->taille = 0;
-  // Réinitialise le contenu du tableau si dynamique
+  // Reinitialise le contenu du tableau si dynamique
   if (db->classes && db->capacite > 0) {
     memset(db->classes, 0, sizeof(Classe) * db->capacite);
   }

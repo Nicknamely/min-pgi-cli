@@ -108,13 +108,6 @@ void afficher_notes(const NoteDB *db, const EtudiantDB *db_etudiant,
          "---+-------------+-------------+\n");
 }
 
-// Charge les notes depuis un CSV (format: numero_etudiant,reference_matiere,noteCC,noteDS)
-// Ajoute chaque note si l'etudiant et la matiere existent
-// (Suppression de charger_notes_csv ici)
-
-// Exporte toutes les notes dans un CSV (format: numero_etudiant,reference_matiere,noteCC,noteDS)
-// (Suppression d'exporter_notes_csv ici)
-
 int rechercher_note(const NoteDB *db, int numero_etudiant,
                     int reference_matiere) {
   for (size_t i = 0; i < db->taille; i++) {
@@ -135,7 +128,7 @@ void freeNoteDB(NoteDB *db) {
   db->capacite = 0;
 }
 
-// Ajoute toutes les notes d'un étudiant dans toutes ses matières
+// Ajoute toutes les notes d'un etudiant dans toutes ses matieres
 int ajouter_notes_etudiant_toutes_matieres(
     NoteDB *db, int numero_etudiant, const EtudiantDB *db_etudiant,
     const ClasseMatiereDB *db_classe_matiere, const MatiereDB *db_matiere) {
@@ -181,7 +174,7 @@ int ajouter_notes_classe_matiere(NoteDB *db, int code_classe, int ref_matiere,
                                  const EtudiantDB *db_etudiant,
                                  const ClasseMatiereDB *db_classe_matiere,
                                  const MatiereDB *db_matiere) {
-  // Verifier que la matiere est bien associee a la classe
+  // Verifie que la matiere est bien associee a la classe (sinon rien a faire)
   int trouve = 0;
   for (size_t i = 0; i < db_classe_matiere->taille; i++) {
     if (db_classe_matiere->relations[i].code_classe == code_classe &&
@@ -196,6 +189,7 @@ int ajouter_notes_classe_matiere(NoteDB *db, int code_classe, int ref_matiere,
   }
   int nb_ajoutees = 0;
   for (size_t i = 0; i < db_etudiant->taille; i++) {
+    // Pour chaque etudiant de la classe
     if (db_etudiant->etudiants[i].classe_code == code_classe) {
       Note n;
       n.numero_etudiant = db_etudiant->etudiants[i].numero;
@@ -223,4 +217,3 @@ int ajouter_notes_classe_matiere(NoteDB *db, int code_classe, int ref_matiere,
          code_classe, ref_matiere);
   return nb_ajoutees;
 }
-

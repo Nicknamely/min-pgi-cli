@@ -14,8 +14,8 @@
 void menu_principal() {
   printf("\n--- MENU PRINCIPAL ---\n");
   printf("1. Gestion des classes\n");
-  printf("2. Gestion des matières\n");
-  printf("3. Gestion des étudiants\n");
+  printf("2. Gestion des matieres\n");
+  printf("3. Gestion des etudiants\n");
   printf("4. Gestion des notes\n");
   printf("0. Quitter\n");
   printf("Choix : ");
@@ -41,8 +41,8 @@ void menu_etudiants() {
 
 void menu_notes() {
   printf("\n--- NOTES ---\n");
-  printf("1. Afficher\n2. Ajouter une note (étudiant)\n3. Ajouter une note "
-         "(matière)\n4. Ajouter une note (classe/matière)\n5. Supprimer\n6. "
+  printf("1. Afficher\n2. Ajouter une note (etudiant)\n3. Ajouter une note "
+         "(matiere)\n4. Ajouter une note (classe/matiere)\n5. Supprimer\n6. "
          "Modifier\n7. Charger CSV\n0. Retour\nChoix : ");
 }
 
