@@ -1,4 +1,8 @@
 # PGI-CLI
+## How to use
+On linux  add the executable to `.local/bin` then export the PATH
+- A session will be created where the program have been created.
+- passing a path to a session via argument will be added in the future
 
 ## How to build the project
 
