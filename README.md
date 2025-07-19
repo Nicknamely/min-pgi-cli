@@ -22,10 +22,10 @@ ninja
 ### Windows
 
 To be verified !
-But using WSL is the recomended way
+But using WSL is the recomended way; a POSIX compliant environment (UNIX BSD LINUX)
 
 #### sublime ?
-
+try neovim !
 ... ?
 
 #### vscode
@@ -96,3 +96,10 @@ test/
 - TUI with PDcurses (not enough time)
 - fn_helper: factorize dynamic array functions into a single function using double pointers
 - Add Unity for unit testing
+
+## what was painful
+- memory management to avoid buffer overflow specially with dynamic table
+- we had to research which data structure was optimal linked-list was the first option
+- we thad to learn dynamic table
+- error handling :(
+
